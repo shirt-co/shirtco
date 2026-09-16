@@ -140,6 +140,10 @@
     return { meta, body };
   }
 
+  function stripMatchingTitle(body, title) {
+    return body.replace(/^#\s+[^\n]+\n+/, "");
+  }
+
   function scoreDoc(queryToks, doc) {
     const hay = tokens(`${doc.title} ${doc.category} ${doc.summary} ${doc.body}`);
     const tf = new Map();
@@ -172,7 +176,7 @@
     const res = await fetch(entry.path);
     const raw = await res.text();
     const parsed = stripFrontmatter(raw);
-    const doc = { ...entry, body: parsed.body };
+    const doc = { ...entry, body: stripMatchingTitle(parsed.body, entry.title) };
     state.docs.set(entry.id, doc);
     return doc;
   }
@@ -191,9 +195,10 @@
     $("reader").hidden = true;
     resultsEl.hidden = false;
     if (!q) {
-      resultsEl.innerHTML = `<p class="empty">Search how Shirt Co quotes, prints, ships, or uses Printavo.</p>`;
+      resultsEl.hidden = true;
       return;
     }
+    resultsEl.innerHTML = `<p class="empty">Searching…</p>`;
 
     let hits = [];
     if (state.local) {
@@ -315,7 +320,7 @@
     state.catalog = await res.json();
     renderCats();
     renderDocList();
-    $("results").innerHTML = `<p class="empty">${state.catalog.doc_count} public topics loaded. Search or pick a topic.</p>`;
+    $("results").hidden = true;
     await checkLocal();
 
     $("searchBtn").addEventListener("click", () => search($("q").value));
