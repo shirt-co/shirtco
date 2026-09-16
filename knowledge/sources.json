@@ -1,0 +1,61 @@
+{
+  "note": "Private Drive sources for the Mac Studio index. Do not download these into the public git repo.",
+  "sources": [
+    {
+      "title": "Handbook - Updated January 2026.pdf",
+      "kind": "drive",
+      "id": "1Hhl0IoXE3cWdS0BPd7q1RVEFj8eeqMJ_",
+      "category": "policies",
+      "visibility": "private",
+      "suggested_path": "private/hr/handbook-2026.md"
+    },
+    {
+      "title": "Billy Printavo Order Entry SOP",
+      "kind": "drive",
+      "id": "1CCN8j_vxN6fnxek5yJRKyi66JhPUalrGNSTn5Q_NVLE",
+      "category": "printavo",
+      "visibility": "private",
+      "suggested_path": "private/printavo/billy-sop.md"
+    },
+    {
+      "title": "Vendor List",
+      "kind": "drive",
+      "id": "1_KT3dOFWNk1N7kUcjJgI9qmYASsCDE8VDyH_4hY-WdI",
+      "category": "vendors",
+      "visibility": "private",
+      "suggested_path": "private/vendors/vendor-list.md"
+    },
+    {
+      "title": "DTFS Pricing and Printavo Matrix",
+      "kind": "drive",
+      "id": "15AtAfgJ0jnCp6iKpDHskidF-ZtQvgeDlNnmyQpWkDzs",
+      "category": "dtf",
+      "visibility": "private",
+      "suggested_path": "private/dtf/printavo-matrix.md"
+    },
+    {
+      "title": "Shirt.Co DTF vs Screen Production Study",
+      "kind": "drive",
+      "id": "1fL-RGcqO2bRgc6NCgLYEFqW5F1iSC6l0qIZeooMumNo",
+      "category": "production",
+      "visibility": "private",
+      "suggested_path": "private/production/dtf-vs-screen.md"
+    },
+    {
+      "title": "Shirt.Co Contact Cheat Sheet — Overview (Aug 2026)",
+      "kind": "drive",
+      "id": "1HlczhRCc_PrR4kEc424wu4n28wss0OHceZXi3p7S06Y",
+      "category": "sales",
+      "visibility": "private",
+      "suggested_path": "private/sales/contact-cheatsheet-overview.md"
+    },
+    {
+      "title": "Monthly Meeting Agenda - Running Doc",
+      "kind": "drive",
+      "id": "1aJjN7aKV4Z48GCx0DwCYqYPMDgZnvtjN37LAXG9Bx50",
+      "category": "ops",
+      "visibility": "private",
+      "suggested_path": "private/ops/monthly-agenda.md"
+    }
+  ]
+}

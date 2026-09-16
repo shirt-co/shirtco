@@ -1,0 +1,265 @@
+:root {
+  --brain: #1d3c52;
+}
+
+.knowledge-app {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 28px 0 80px;
+}
+
+.knowledge-hero {
+  display: grid;
+  gap: 18px;
+  padding: 18px 0 28px;
+}
+
+.knowledge-hero h1 {
+  margin: 0;
+  font-size: clamp(2.4rem, 6vw, 4.4rem);
+  letter-spacing: -0.055em;
+  line-height: 0.96;
+}
+
+.knowledge-hero .lede {
+  max-width: 640px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.55;
+}
+
+.search-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  max-width: 760px;
+}
+
+.search-row input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font: inherit;
+  font-size: 1.02rem;
+  background: var(--surface);
+}
+
+.search-row input:focus {
+  outline: 2px solid rgba(239, 90, 36, 0.35);
+  border-color: var(--orange);
+}
+
+.search-row button {
+  border: 0;
+  border-radius: 12px;
+  padding: 0 18px;
+  background: var(--ink);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.brain-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: #edf0f2;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.brain-status.live {
+  background: #e4f3eb;
+  color: var(--green);
+}
+
+.brain-status.warn {
+  background: #fff4e8;
+  color: var(--orange-dark);
+}
+
+.category-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chip.active {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+}
+
+.knowledge-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  gap: 22px;
+  align-items: start;
+}
+
+.results,
+.reader,
+.setup-card {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.result-card,
+.doc-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  padding: 16px 18px;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.result-card:last-child,
+.doc-card:last-child {
+  border-bottom: 0;
+}
+
+.result-card:hover,
+.doc-card:hover,
+.result-card.active {
+  background: #faf7f3;
+}
+
+.meta {
+  margin: 0 0 6px;
+  color: var(--orange-dark);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.result-card h3,
+.doc-card h3,
+.reader-head h2 {
+  margin: 0 0 6px;
+  letter-spacing: -0.03em;
+}
+
+.snippet,
+.doc-card p,
+.empty {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.empty {
+  padding: 22px 18px;
+}
+
+.reader {
+  min-height: 420px;
+}
+
+.reader-head {
+  padding: 18px 20px 0;
+}
+
+.prose {
+  padding: 8px 20px 24px;
+  line-height: 1.62;
+}
+
+.prose h1,
+.prose h2,
+.prose h3 {
+  letter-spacing: -0.03em;
+}
+
+.prose h1 { font-size: 1.6rem; }
+.prose h2 { font-size: 1.2rem; margin-top: 1.4em; }
+.prose p, .prose li { color: var(--ink); }
+.prose ul, .prose ol { padding-left: 1.2em; }
+.prose code, .prose pre {
+  font-family: var(--mono);
+  font-size: 0.86em;
+}
+.prose pre {
+  overflow: auto;
+  padding: 12px;
+  border-radius: 10px;
+  background: #17212b;
+  color: #f4f5f2;
+}
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.prose th,
+.prose td {
+  border-bottom: 1px solid var(--line);
+  padding: 6px 8px;
+  text-align: left;
+}
+
+.setup-card {
+  padding: 18px;
+}
+
+.setup-card h2 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+
+.setup-card p,
+.setup-card li {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.setup-card pre {
+  overflow: auto;
+  margin: 12px 0 0;
+  padding: 12px;
+  border-radius: 10px;
+  background: #17212b;
+  color: #f4f5f2;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+
+.sidebar {
+  display: grid;
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .knowledge-layout,
+  .search-row {
+    grid-template-columns: 1fr;
+  }
+}

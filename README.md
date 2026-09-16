@@ -21,7 +21,8 @@ shirtco/
 ├── transfers/         # Live DTF transfer order portal
 ├── supplies/          # Live QR supply kanban
 ├── quotes/            # Quoting tool planning space
-└── art/               # Art tracker planning space
+├── art/               # Art tracker planning space
+└── knowledge/         # Company brain (search + Mac Studio local model)
 ```
 
 Production URLs:
@@ -31,6 +32,7 @@ Production URLs:
 - Supply Kanban: `https://shirt-co.github.io/shirtco/supplies/`
 - Quoting Tool: `https://shirt-co.github.io/shirtco/quotes/`
 - Art Tracker: `https://shirt-co.github.io/shirtco/art/`
+- Company Brain: `https://shirt-co.github.io/shirtco/knowledge/`
 
 Each tool owns its folder and can evolve independently. Add another tool by creating a new folder with an `index.html`, then add its card to the root hub.
 
@@ -57,6 +59,16 @@ The supply app is a phone-scannable kanban for workplace supplies:
 4. Track **On shelf → Needs reorder → On order**, then mark received.
 
 QR codes embed item details, so phones do not need a shared login. Board state currently lives in each browser's `localStorage`; cross-device reorders travel by email until a shared backend is added.
+
+## Company Brain
+
+Searchable Shirt Co knowledge for employees and AI agents.
+
+- Public process docs live in `knowledge/corpus/` and search from the hub with no login.
+- Private files (handbook, vendor list, customer cheat sheets) stay in gitignored `knowledge/private/` on the Mac Studio.
+- On the Studio, `knowledge/scripts/setup-mac-studio.sh` wires Ollama + a Cursor MCP server so agents can `search_shirtco` when they need it.
+
+Check retrieval with `python3 knowledge/server/test_brain.py`.
 
 ## Run locally
 

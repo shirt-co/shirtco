@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Searchable Shirt Co company knowledge for employees and AI agents.">
+    <title>Company Brain — Shirt Co Projects</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../hub.css">
+    <link rel="stylesheet" href="knowledge.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../" aria-label="Shirt Co projects home">
+        <span class="brand-mark">S</span>
+        <span>Shirt Co</span>
+      </a>
+      <span class="workspace-label">Team workspace</span>
+    </header>
+
+    <main class="knowledge-app">
+      <section class="knowledge-hero">
+        <p class="eyebrow">Project 05 · Live</p>
+        <h1>Company Brain</h1>
+        <p class="lede">How Shirt Co actually works — searchable for people on the floor and for agents on the Mac Studio.</p>
+        <div class="search-row">
+          <input id="q" type="search" placeholder="Ask how we quote, ship, print, or use Printavo" autocomplete="off">
+          <button type="button" id="searchBtn">Search</button>
+        </div>
+        <div id="status" class="brain-status">Checking local brain…</div>
+        <div id="cats" class="category-row"></div>
+      </section>
+
+      <div class="knowledge-layout">
+        <section>
+          <div id="results" class="results" aria-live="polite"></div>
+          <article id="reader" class="reader" hidden></article>
+        </section>
+        <aside class="sidebar">
+          <div class="setup-card">
+            <h2>Mac Studio</h2>
+            <p>Public docs search here without a server. Private handbook, vendors, and customer notes stay on the Studio.</p>
+            <pre>./knowledge/scripts/setup-mac-studio.sh
+python3 knowledge/server/brain.py serve</pre>
+          </div>
+          <div>
+            <p class="eyebrow">Topics</p>
+            <div id="docList" class="results"></div>
+          </div>
+        </aside>
+      </div>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>

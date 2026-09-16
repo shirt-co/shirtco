@@ -1,0 +1,243 @@
+{
+  "name": "Shirt Co Company Brain",
+  "visibility": "public-safe corpus; private docs stay on the Mac Studio",
+  "doc_count": 15,
+  "categories": {
+    "agents": 1,
+    "company": 1,
+    "contract": 1,
+    "dtf": 1,
+    "glossary": 1,
+    "policies": 1,
+    "printavo": 1,
+    "quoting": 1,
+    "screen-print": 1,
+    "shipping": 1,
+    "supplies": 1,
+    "tools": 4
+  },
+  "docs": [
+    {
+      "id": "agent-rules",
+      "title": "Rules for AI agents and bots",
+      "category": "agents",
+      "audience": "agents",
+      "visibility": "public",
+      "updated": "2026-09-16",
+      "summary": "Hard stops for every Shirt Co bot \u2014 what they may draft, and what only a human can do.",
+      "tags": [
+        "billy",
+        "safety",
+        "printavo"
+      ],
+      "path": "corpus/agent-rules.md"
+    },
+    {
+      "id": "company",
+      "title": "Who Shirt Co is",
+      "category": "company",
+      "audience": "everyone",
+      "visibility": "public",
+      "updated": "2026-09-16",
+      "summary": "Legal and trading names, what the shop does, and which brands belong together.",
+      "tags": [
+        "overview",
+        "brands",
+        "stl"
+      ],
+      "path": "corpus/company.md"
+    },
+    {
+      "id": "contract-decoration",
+      "title": "Contract and decorate-only work",
+      "category": "contract",
+      "audience": "sales, agents",
+      "visibility": "public",
+      "updated": "2026-09-16",
+      "summary": "Blind-ship contract screen print \u2014 the customer sells the shirts, Shirt Co decorates.",
+      "tags": [
+        "contract",
+        "blind-ship",
+        "screen-print"
+      ],
+      "path": "corpus/contract-decoration.md"
+    },
+    {
+      "id": "dtf-transfers",
+      "title": "DTF transfers",
+      "category": "dtf",
+      "audience": "everyone",
+      "visibility": "public",
+      "updated": "2026-09-16",
+      "summary": "How Shirt Co sells and builds DTF work \u2014 shop garments, wholesale transfers, sizes, and pricing.",
+      "tags": [
+        "dtf",
+        "pricing",
+        "wholesale"
+      ],
+      "path": "corpus/dtf-transfers.md"
+    },
+    {
+      "id": "glossary",
+      "title": "Shirt Co glossary",
+      "category": "glossary",
+      "audience": "everyone",
+      "visibility": "public",
+      "updated": "2026-09-16",
+      "summary": "Shop words agents and new hires mix up.",
+      "tags": [
+        "glossary"
+      ],
+      "path": "corpus/glossary.md"
+    },
+    {
+      "id": "hr-and-handbook",
+      "title": "HR and the employee handbook",
+      "category": "policies",
+      "audience": "everyone",
+      "visibility": "public",
+      "updated": "2026-09-16",
+      "summary": "Where handbook questions go. The handbook itself is private.",
+      "tags": [
+        "hr",
+        "handbook"
+      ],
+      "path": "corpus/hr-and-handbook.md"
+    },
+    {
+      "id": "printavo-order-entry",
+      "title": "Printavo order entry",
+      "category": "printavo",
+      "audience": "sales, agents",
+      "visibility": "public",
+      "updated": "2026-09-16",
+      "summary": "How Shirt Co writes quotes and invoices in Printavo, including grouping, imprints, and dates.",
+      "tags": [
+        "printavo",
+        "billy",
+        "quoting"
+      ],
+      "path": "corpus/printavo-order-entry.md"
+    },
+    {
+      "id": "quoting-and-art",
+      "title": "Quoting and art",
+      "category": "quoting",
+      "audience": "sales, art",
+      "visibility": "public",
+      "updated": "2026-09-16",
+      "summary": "Where quotes and art live today, and what is still planning.",
+      "tags": [
+        "quotes",
+        "art",
+        "printavo"
+      ],
+      "path": "corpus/quoting-and-art.md"
+    },
+    {
+      "id": "screen-print",
+      "title": "Screen print",
+      "category": "screen-print",
+      "audience": "production, sales, agents",
+      "visibility": "public",
+      "updated": "2026-09-16",
+      "summary": "How Shirt Co enters screen-print decoration in Printavo.",
+      "tags": [
+        "screen-print",
+        "imprint",
+        "union"
+      ],
+      "path": "corpus/screen-print.md"
+    },
+    {
+      "id": "shipping",
+      "title": "Shipping, pickup, and packing identity",
+      "category": "shipping",
+      "audience": "everyone",
+      "visibility": "public",
+      "updated": "2026-09-16",
+      "summary": "Pickup vs ship, blind ship, white-label packing slips, and when address is required.",
+      "tags": [
+        "shipping",
+        "pickup",
+        "blind-ship"
+      ],
+      "path": "corpus/shipping.md"
+    },
+    {
+      "id": "supplies",
+      "title": "Supply Kanban",
+      "category": "supplies",
+      "audience": "shop",
+      "visibility": "public",
+      "updated": "2026-09-16",
+      "summary": "QR-powered supply reordering for the shop floor.",
+      "tags": [
+        "kanban",
+        "qr",
+        "shop"
+      ],
+      "path": "corpus/supplies.md"
+    },
+    {
+      "id": "how-we-ship-software",
+      "title": "How Shirt Co ships internal software",
+      "category": "tools",
+      "audience": "everyone",
+      "visibility": "public",
+      "updated": "2026-09-16",
+      "summary": "Non-dev playbook for changing hub tools without git.",
+      "tags": [
+        "github",
+        "hub",
+        "ship"
+      ],
+      "path": "corpus/how-we-ship-software.md"
+    },
+    {
+      "id": "mac-studio-brain",
+      "title": "Mac Studio company brain",
+      "category": "tools",
+      "audience": "agents, ops",
+      "visibility": "public",
+      "updated": "2026-09-16",
+      "summary": "How the local model on Connor's Mac Studio holds Shirt Co knowledge for agents.",
+      "tags": [
+        "ollama",
+        "mcp",
+        "rag"
+      ],
+      "path": "corpus/mac-studio-brain.md"
+    },
+    {
+      "id": "sources-to-ingest",
+      "title": "Private sources to ingest on the Mac Studio",
+      "category": "tools",
+      "audience": "ops",
+      "visibility": "public",
+      "updated": "2026-09-16",
+      "summary": "Drive documents that belong in private knowledge \u2014 listed by name, not copied here.",
+      "tags": [
+        "ingest",
+        "drive"
+      ],
+      "path": "corpus/sources-to-ingest.md"
+    },
+    {
+      "id": "tools",
+      "title": "Tools Shirt Co uses",
+      "category": "tools",
+      "audience": "everyone",
+      "visibility": "public",
+      "updated": "2026-09-16",
+      "summary": "Printavo, Missive, garment vendors, and the internal hub tools.",
+      "tags": [
+        "printavo",
+        "missive",
+        "github",
+        "hub"
+      ],
+      "path": "corpus/tools.md"
+    }
+  ]
+}

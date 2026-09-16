@@ -300,6 +300,32 @@ main {
   color: var(--navy);
 }
 
+.knowledge-icon {
+  background: var(--navy);
+  position: relative;
+}
+
+.knowledge-icon::before,
+.knowledge-icon::after {
+  content: "";
+  position: absolute;
+  background: #fff;
+}
+
+.knowledge-icon::before {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  top: 10px;
+}
+
+.knowledge-icon::after {
+  width: 22px;
+  height: 8px;
+  border-radius: 8px 8px 2px 2px;
+  bottom: 10px;
+}
+
 .status {
   padding: 6px 9px;
   border-radius: 999px;
