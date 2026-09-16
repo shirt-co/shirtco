@@ -26,11 +26,11 @@ shirtco/
 
 Production URLs:
 
-- Hub: `https://mcdonnelc.github.io/shirtco/`
-- Transfer Orders: `https://mcdonnelc.github.io/shirtco/transfers/`
-- Supply Kanban: `https://mcdonnelc.github.io/shirtco/supplies/`
-- Quoting Tool: `https://mcdonnelc.github.io/shirtco/quotes/`
-- Art Tracker: `https://mcdonnelc.github.io/shirtco/art/`
+- Hub: `https://shirt-co.github.io/shirtco/`
+- Transfer Orders: `https://shirt-co.github.io/shirtco/transfers/`
+- Supply Kanban: `https://shirt-co.github.io/shirtco/supplies/`
+- Quoting Tool: `https://shirt-co.github.io/shirtco/quotes/`
+- Art Tracker: `https://shirt-co.github.io/shirtco/art/`
 
 Each tool owns its folder and can evolve independently. Add another tool by creating a new folder with an `index.html`, then add its card to the root hub.
 

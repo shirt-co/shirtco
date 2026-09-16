@@ -6,8 +6,8 @@ One page. No git required for Audrey, Steve, or anyone else.
 
 All internal tools live in one public GitHub repo and publish automatically:
 
-- Hub: https://mcdonnelc.github.io/shirtco/
-- Repo: https://github.com/mcdonnelc/shirtco
+- Hub: https://shirt-co.github.io/shirtco/
+- Repo: https://github.com/shirt-co/shirtco
 
 Cursor / Grok Bot builds the code. GitHub Pages publishes it when `main` updates. You never need Terminal.
 
@@ -22,7 +22,7 @@ Cursor / Grok Bot builds the code. GitHub Pages publishes it when `main` updates
 
 ## Ship a change (everyday)
 
-1. Message Connor’s Wiffle chat, or open Cursor on the `shirtco` repo and say what you want.
+1. Message Connor’s Wiffle chat, or open Cursor on the `shirt-co/shirtco` repo and say what you want.
    Example: “On Supply Kanban, add a column for On hold and show it on phone.”
 2. Wait for a PR link. Open it. Click the preview if there is one, or open the live tool folder after merge.
 3. If it looks right, reply “merge” (or click **Merge pull request** yourself if you have access).
@@ -33,7 +33,7 @@ Cursor / Grok Bot builds the code. GitHub Pages publishes it when `main` updates
 1. Name it in one sentence (who uses it, what it replaces).
 2. Ask the bot to create a new folder (`toolname/`) with `index.html`, wire a card on the hub home, and open a PR.
 3. Review + merge same as above.
-4. Share the new URL with the shop: `https://mcdonnelc.github.io/shirtco/toolname/`
+4. Share the new URL with the shop: `https://shirt-co.github.io/shirtco/toolname/`
 
 ## Test without breaking live
 
@@ -52,9 +52,7 @@ Cursor / Grok Bot builds the code. GitHub Pages publishes it when `main` updates
 
 **Default (easiest):** no GitHub login. Ask Wiffle / Cursor → PR → Connor merges.
 
-**Optional (faster):** GitHub **Write** collaborator on `mcdonnelc/shirtco` + Cursor connected to that GitHub account. Then you can merge your own PRs after a self-check. Still no Terminal.
-
-**Later (cleanest for a growing team):** move the repo into a Shirt.Co GitHub org and add a `hub-publishers` team.
+**Optional (faster):** Join org `shirt-co` team `hub-publishers` (**Write**) and connect Cursor to that GitHub account. Cursor opens `shirt-co/shirtco`. Then you can merge your own PRs after a self-check. Still no Terminal.
 
 ## One-line ask templates
 
