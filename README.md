@@ -2,12 +2,22 @@
 
 One repository and GitHub Pages site for Shirt Co's internal software.
 
+## How the team ships changes
+
+You do not need git or Terminal. The full playbook is in [SHIP.md](SHIP.md).
+
+- Describe the change in plain English (Wiffle chat or Cursor).
+- A bot opens a Pull Request; Connor (or a named Approver) merges after a quick look.
+- GitHub Pages publishes the hub in a few minutes. No extra deploy button.
+- Rules, new-tool steps, and ask templates live in the ship playbook.
+
 ## Project structure
 
 ```text
 shirtco/
 ├── index.html         # Project hub
 ├── hub.css            # Shared hub/planning-page styles
+├── SHIP.md            # Non-dev ship playbook
 ├── transfers/         # Live DTF transfer order portal
 ├── supplies/          # Live QR supply kanban
 ├── quotes/            # Quoting tool planning space
@@ -16,11 +26,11 @@ shirtco/
 
 Production URLs:
 
-- Hub: `https://mcdonnelc.github.io/shirtco/`
-- Transfer Orders: `https://mcdonnelc.github.io/shirtco/transfers/`
-- Supply Kanban: `https://mcdonnelc.github.io/shirtco/supplies/`
-- Quoting Tool: `https://mcdonnelc.github.io/shirtco/quotes/`
-- Art Tracker: `https://mcdonnelc.github.io/shirtco/art/`
+- Hub: `https://shirt-co.github.io/shirtco/`
+- Transfer Orders: `https://shirt-co.github.io/shirtco/transfers/`
+- Supply Kanban: `https://shirt-co.github.io/shirtco/supplies/`
+- Quoting Tool: `https://shirt-co.github.io/shirtco/quotes/`
+- Art Tracker: `https://shirt-co.github.io/shirtco/art/`
 
 Each tool owns its folder and can evolve independently. Add another tool by creating a new folder with an `index.html`, then add its card to the root hub.
 
