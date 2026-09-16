@@ -1,0 +1,10 @@
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+
+# Local Shirt Co brain — private docs and embedding index stay on the Mac Studio
+knowledge/private/**
+!knowledge/private/README.md
+knowledge/.index/
+knowledge/server/.index/

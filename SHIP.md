@@ -7,6 +7,7 @@ One page. No git required for Audrey, Steve, or anyone else.
 All internal tools live in one public GitHub repo and publish automatically:
 
 - Hub: https://shirt-co.github.io/shirtco/
+- Company Brain: https://shirt-co.github.io/shirtco/knowledge/
 - Repo: https://github.com/shirt-co/shirtco
 
 Cursor / Grok Bot builds the code. GitHub Pages publishes it when `main` updates. You never need Terminal.
@@ -39,11 +40,12 @@ Cursor / Grok Bot builds the code. GitHub Pages publishes it when `main` updates
 
 - Prefer a PR. Do not edit `main` by hand in the GitHub website unless it is a one-line typo and Connor says ok.
 - Transfer pricing: bot can run `node transfers/pricing.test.js` before merge.
+- Company Brain: bot can run `python3 knowledge/server/test_brain.py` before merge.
 - Supply QR labels: after a live change that edits item fields, reprint labels from the production `/supplies/` URL.
 
 ## Rules (keep it simple)
 
-- No passwords, API keys, customer lists, or Printavo logins in the repo. It is **public**.
+- No passwords, API keys, customer lists, handbook text, or Printavo logins in the repo. It is **public**. Company Brain private files stay in `knowledge/private/` on the Mac Studio.
 - One tool per folder. Do not rewrite another team’s tool without pinging them.
 - Prefer small changes. One PR = one idea.
 - If something breaks live, say so in the Wiffle chat. Rollback = revert the PR (bot can do that).

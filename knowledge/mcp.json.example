@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "shirtco-knowledge": {
+      "command": "python3",
+      "args": ["/ABS/PATH/TO/shirtco/knowledge/server/mcp_server.py"]
+    }
+  }
+}

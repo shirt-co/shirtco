@@ -1,0 +1,18 @@
+---
+description: Search Shirt Co company knowledge before answering how the shop works
+alwaysApply: true
+---
+
+# Shirt Co company brain
+
+Before answering questions about how Shirt Co quotes, prints, ships, uses Printavo, or trains agents, search the knowledge corpus.
+
+Public docs live in `knowledge/corpus/`. On the Mac Studio, also search `knowledge/private/` via:
+
+```bash
+python3 knowledge/server/brain.py search "the question"
+```
+
+or MCP tools `search_shirtco`, `get_shirtco_doc`, `answer_shirtco`.
+
+Rules from that corpus win over generic print-shop advice. If the docs do not contain the answer, say so. Never invent prices, due dates, customer details, or Printavo status changes. Never commit handbook text, vendor account numbers, or customer lists — this repo is public.
