@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Shirt Co Auto Pricer — instant decoration pricing from blank cost, quantity, and imprint locations.">
+<title>Auto Pricer — Shirt Co Projects</title>
+<style>
+body{margin:0;background:#0a0d12}
+.pricer-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.pricer-results{position:sticky;top:32px;align-self:start}
+.pricer-input,.pricer-select{min-height:44px}
+.pricer-service-btn{min-height:40px}
+@media (max-width:800px){
+  .pricer-grid{grid-template-columns:1fr}
+  .pricer-results{position:static;top:auto}
+  .pricer-input,.pricer-select{min-height:48px;font-size:16px!important;padding-top:14px!important;padding-bottom:14px!important}
+  .pricer-service-btn{min-height:44px;padding:12px 10px!important;font-size:13px!important}
+  .pricer-add-btn{min-height:44px;padding:10px 16px!important;font-size:14px!important}
+}
+</style>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const { useState, useCallback, useMemo } = React;
+
+// ── Pricing Data ──────────────────────────────────────────────────────────────
+
+const QTY_TIERS = [1, 12, 24, 48, 72, 144, 288, 500, 1000];
+const PATCH_QTY_TIERS = [25, 50, 100, 250, 500];
+
+const SCREEN_PRINT = {
+  label: "Screen Printing",
+  firstLocation: {
+    options: [
+      "1-color", "2-color", "3-color", "4-color", "5-color",
+      "6-color", "7-color", "8-color", "9-color", "10-color", "11-color"
+    ],
+    prices: [
+      [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+      [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+      [6, 7, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+      [5, 6, 7, 8, 100, 100, 100, 100, 100, 100, 100],
+      [3.5, 4, 4.5, 5.25, 6, 100, 100, 100, 100, 100, 100],
+      [2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5],
+      [2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7],
+      [1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 3.75, 4],
+      [1.25, 1.35, 1.45, 1.55, 1.65, 1.75, 1.85, 1.95, 2.05, 2.15, 2.25],
+    ],
+    markup: [2.0, 2.0, 2.0, 1.8, 1.75, 1.7, 1.65, 1.6, 1.6],
+  },
+  additionalLocation: {
+    options: [
+      "1-color", "2-color", "3-color", "4-color", "5-color",
+      "6-color", "7-color", "8-color", "9-color", "10-color", "11-color"
+    ],
+    prices: [
+      [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+      [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+      [5, 5, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+      [4, 3.75, 4.5, 5.25, 100, 100, 100, 100, 100, 100, 100],
+      [3, 2.5, 3, 3.5, 4, 100, 100, 100, 100, 100, 100],
+      [1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 3.75, 4],
+      [1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2],
+      [0.75, 0.85, 0.95, 1, 1.05, 1.1, 1.15, 1.25, 1.35, 1.45, 1.55],
+      [0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5],
+    ],
+    markup: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  },
+};
+
+const EMBROIDERY = {
+  label: "Embroidery",
+  firstLocation: {
+    options: [
+      "LC or Hat", "LC or Hat - PUFF", "Full Size",
+      "Side/Back of Hat, Boonie, Bag", "Name OR # (1 line)", "Name OR # (2 lines)"
+    ],
+    prices: [
+      [11, 20, 50, 15, 12, 15],
+      [7, 14, 40, 11, 10, 12],
+      [6, 10, 40, 7.5, 10, 12],
+      [5, 8.5, 35, 6.5, 9, 11],
+      [4.5, 8, 30, 5.5, 9, 11],
+      [4, 7.5, 25, 5, 8, 10],
+      [3.5, 7, 20, 4.5, 8, 10],
+      [3.25, 6.75, 20, 4.25, 8, 9],
+      [3, 6.5, 20, 4, 8, 9],
+    ],
+    markup: [2.0, 2.0, 2.0, 1.9, 1.8, 1.7, 1.6, 1.5, 1.5],
+  },
+  additionalLocation: {
+    options: [
+      "LC or Hat Front", "Full Size", "Side/Back of Hat, Boonie, Bag"
+    ],
+    prices: [
+      [11, 50, 13],
+      [7, 40, 9],
+      [6, 40, 7.5],
+      [5, 35, 6.5],
+      [4.5, 30, 5.5],
+      [4, 25, 5],
+      [3.5, 20, 4.5],
+      [3.25, 20, 4.25],
+      [3, 20, 4],
+    ],
+    markup: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  },
+};
+
+const DTF = {
+  label: "DTF",
+  firstLocation: {
+    options: ["DTF - Any Size", "DTF Name OR Number"],
+    prices: [
+      [20, 6],
+      [10, 6],
+      [5, 6],
+      [4, 6],
+      [4, 6],
+      [4, 6],
+      [3.5, 5],
+      [3.5, 5],
+      [3.5, 5],
+    ],
+    markup: [2.0, 2.0, 2.0, 2.0, 1.8, 1.75, 1.7, 1.6, 1.6],
+  },
+  additionalLocation: {
+    options: ["DTF - Any Size", "DTF Name OR Number"],
+    prices: [
+      [15, 6],
+      [7, 6],
+      [4, 6],
+      [4, 6],
+      [4, 6],
+      [3.5, 6],
+      [3, 5],
+      [3, 5],
+      [3, 5],
+    ],
+    markup: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  },
+};
+
+const storeRow = (prices) => Array(9).fill(prices);
+
+const STORE = {
+  label: "Store",
+  firstLocation: {
+    options: [
+      "Screen 2-Color", "Screen 3-Color", "Screen 4-Color", "Screen 5-Color", "Screen 6-Color",
+      "Rush Screen 1-Color", "Rush Screen 2-Color", "Rush Screen 3-Color",
+      "DTF - Any Size",
+      "EMB - LC/Hat", "EMB - Full Size"
+    ],
+    prices: storeRow([11, 13, 15, 17, 19, 14, 16, 18, 8.5, 8.5, 17]),
+    markup: [2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0],
+  },
+  additionalLocation: {
+    options: [
+      "Screen 2-Color", "Screen 3-Color", "Screen 4-Color", "Screen 5-Color", "Screen 6-Color",
+      "Rush Screen 1-Color", "Rush Screen 2-Color", "Rush Screen 3-Color",
+      "DTF - Any Size",
+      "EMB - LC/Hat", "EMB - Full Size"
+    ],
+    prices: storeRow([6.25, 8.25, 10.5, 12.5, 14.5, 6, 8, 10, 8.5, 8.5, 17]),
+    markup: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  },
+};
+
+// ── Patches Data ──────────────────────────────────────────────────────────────
+
+const PATCH_SIZES_7 = [
+  '1.01"-1.5"', '1.51"-2.0"', '2.01"-2.5"', '2.51"-3.0"', '3.01"-3.5"', '3.51"-4.0"', '4.01"-4.5"'
+];
+const PATCH_SIZES_6 = [
+  '1.01"-1.5"', '1.51"-2.0"', '2.01"-2.5"', '2.51"-3.0"', '3.01"-3.5"', '3.51"-4.0"'
+];
+const PATCH_MARKUP = [2.0, 1.9, 1.8, 1.8, 1.75];
+const PATCH_MARKUP_ZERO = [0, 0, 0, 0, 0];
+
+const PATCH_TYPES = [
+  {
+    label: "Embroidered",
+    sizes: PATCH_SIZES_7,
+    prices: [
+      [5.64, 7.48, 9.38, 11.2, 13.04, 14.96, 16.78],
+      [4.9, 6.48, 8.16, 9.74, 11.36, 13, 14.6],
+      [3.22, 4.34, 5.4, 6.5, 7.6, 8.62, 9.72],
+      [2.3, 2.93, 3.82, 5.54, 5.31, 6.1, 6.88],
+      [2.3, 2.93, 3.82, 5.54, 5.31, 6.1, 6.88],
+    ],
+  },
+  {
+    label: "Print & Stitch",
+    sizes: PATCH_SIZES_7,
+    prices: [
+      [6.2, 8.22, 10.32, 12.32, 14.36, 16.46, 18.46],
+      [5.4, 7.14, 8.96, 10.72, 12.48, 14.32, 16.06],
+      [3.55, 4.77, 5.96, 7.15, 8.37, 9.47, 11.86],
+      [2.52, 3.2, 4.21, 5, 5.83, 6.7, 8.37],
+      [2.52, 3.2, 4.21, 5, 5.83, 6.7, 8.37],
+    ],
+  },
+  {
+    label: "PVC",
+    sizes: PATCH_SIZES_6,
+    prices: [
+      [13.6, 13.72, 16.76, 16.8, 19.7, 22.64],
+      [10.48, 10.56, 12.88, 12.92, 15.14, 17.46],
+      [6.5, 6.53, 7.74, 7.78, 8.89, 10.24],
+      [4.52, 4.55, 5.13, 5.2, 5.85, 6.79],
+      [3.69, 3.76, 4.45, 4.48, 4.97, 5.69],
+    ],
+  },
+  {
+    label: "Faux Leather",
+    sizes: PATCH_SIZES_7,
+    prices: [
+      [5.9, 6.6, 7.4, 8.2, 8.9, 9.7, 10.1],
+      [3.74, 4.48, 5.4, 6.6, 7.4, 7.82, 8.36],
+      [2.43, 3.1, 4.12, 4.79, 4.95, 5.33, 5.69],
+      [1.85, 2.5, 3.58, 3.82, 3.98, 4.46, 4.86],
+      [1.67, 2.34, 2.79, 2.97, 3.17, 3.65, 3.98],
+    ],
+  },
+  {
+    label: "Genuine Leather",
+    sizes: PATCH_SIZES_7,
+    prices: [
+      [7.66, 8.56, 9.64, 10.7, 11.56, 12.6, 13.12],
+      [4.9, 5.82, 7, 8.56, 9.64, 10.14, 10.82],
+      [3.17, 4.03, 5.35, 6.25, 6.44, 6.91, 7.4],
+      [2.41, 3.26, 4.64, 4.95, 5.18, 5.83, 6.3],
+      [2.14, 3.06, 3.64, 3.85, 4.1, 4.73, 5.18],
+    ],
+  },
+];
+
+const PATCHES = {
+  label: "Patches",
+  isPatches: true,
+  qtyTiers: PATCH_QTY_TIERS,
+  patchTypes: PATCH_TYPES,
+  // markup and zero markup for first/additional
+  markup: PATCH_MARKUP,
+  markupZero: PATCH_MARKUP_ZERO,
+};
+
+const SERVICES = {
+  screenPrint: SCREEN_PRINT,
+  embroidery: EMBROIDERY,
+  dtf: DTF,
+  store: STORE,
+  patches: PATCHES,
+};
+
+const SERVICE_KEYS = Object.keys(SERVICES);
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function getTierIndex(qty, tiers) {
+  let idx = 0;
+  for (let i = tiers.length - 1; i >= 0; i--) {
+    if (qty >= tiers[i]) { idx = i; break; }
+  }
+  return idx;
+}
+
+function formatCurrency(val) {
+  return "$" + val.toFixed(2);
+}
+
+// Get the right table for a location (handles patches specially)
+function getLocationTable(serviceKey, location, isFirst) {
+  const service = SERVICES[serviceKey];
+  if (service.isPatches) {
+    const patchTypeIdx = location.patchTypeIdx || 0;
+    const pt = service.patchTypes[patchTypeIdx];
+    return {
+      options: pt.sizes,
+      prices: pt.prices,
+      markup: isFirst ? service.markup : service.markupZero,
+      qtyTiers: service.qtyTiers,
+    };
+  }
+  const table = isFirst ? service.firstLocation : service.additionalLocation;
+  return { ...table, qtyTiers: QTY_TIERS };
+}
+
+// ── Components ────────────────────────────────────────────────────────────────
+
+const FONT_URL = "https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;600&display=swap";
+
+const selectStyle = {
+  width: "100%",
+  background: "#0a0d12",
+  border: "1px solid #1e2330",
+  borderRadius: 8,
+  color: "#e5e7eb",
+  padding: "12px 32px 12px 12px",
+  fontSize: 16,
+  fontFamily: "'DM Sans', sans-serif",
+  cursor: "pointer",
+  outline: "none",
+  appearance: "none",
+  WebkitAppearance: "none",
+  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: "right 12px center",
+  boxSizing: "border-box",
+};
+
+function LocationCard({ index, location, onChange, onRemove, qty }) {
+  const isFirst = index === 0;
+  const serviceKey = location.serviceKey;
+  const service = SERVICES[serviceKey];
+  const isPatches = !!service.isPatches;
+
+  const table = getLocationTable(serviceKey, location, isFirst);
+  const tierIdx = getTierIndex(qty || 1, table.qtyTiers);
+
+  const optionIdx = location.optionIdx < table.options.length ? location.optionIdx : 0;
+  const decoPrice = table.prices[tierIdx]?.[optionIdx] ?? 0;
+  const isUnavailable = decoPrice >= 100 && serviceKey === "screenPrint";
+
+  const handleServiceChange = (newKey) => {
+    onChange({ ...location, serviceKey: newKey, optionIdx: 0, patchTypeIdx: 0 });
+  };
+
+  const handlePatchTypeChange = (idx) => {
+    onChange({ ...location, patchTypeIdx: idx, optionIdx: 0 });
+  };
+
+  const patchTypeIdx = location.patchTypeIdx || 0;
+
+  // Check if qty is below minimum patch tier
+  const belowPatchMin = isPatches && (qty || 1) < PATCH_QTY_TIERS[0];
+
+  return (
+    <div style={{
+      background: isFirst ? "linear-gradient(135deg, #1a1f2e 0%, #0f1319 100%)" : "#111318",
+      border: `1px solid ${isFirst ? "#2a3a5c" : "#1e2330"}`,
+      borderRadius: 14,
+      padding: "20px 22px",
+      position: "relative",
+      transition: "all 0.25s ease",
+    }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+          <span style={{
+            background: isFirst ? "#3b82f6" : "#374151",
+            color: "#fff",
+            fontSize: 11,
+            fontWeight: 700,
+            padding: "3px 10px",
+            borderRadius: 6,
+            letterSpacing: "0.05em",
+            fontFamily: "'JetBrains Mono', monospace",
+            whiteSpace: "nowrap",
+          }}>
+            {isFirst ? "PRIMARY" : `LOCATION ${index + 1}`}
+          </span>
+          {isUnavailable && (
+            <span style={{
+              background: "#7f1d1d", color: "#fca5a5", fontSize: 11, fontWeight: 600,
+              padding: "3px 10px", borderRadius: 6, fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap",
+            }}>
+              Min qty not met
+            </span>
+          )}
+          {belowPatchMin && (
+            <span style={{
+              background: "#78350f", color: "#fcd34d", fontSize: 11, fontWeight: 600,
+              padding: "3px 10px", borderRadius: 6, fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap",
+            }}>
+              Min 25 pcs for patches
+            </span>
+          )}
+        </div>
+        {index > 0 && (
+          <button onClick={onRemove} style={{
+            background: "none", border: "none", color: "#6b7280", cursor: "pointer",
+            fontSize: 18, lineHeight: 1, padding: "2px 6px", borderRadius: 6,
+            transition: "all 0.15s", flexShrink: 0,
+          }}
+            onMouseEnter={e => { e.target.style.color = "#ef4444"; e.target.style.background = "#1f1215"; }}
+            onMouseLeave={e => { e.target.style.color = "#6b7280"; e.target.style.background = "none"; }}
+          >×</button>
+        )}
+      </div>
+
+      {/* Service selector */}
+      <label style={{ display: "block", marginBottom: 6, color: "#9ca3af", fontSize: 12, fontWeight: 500, letterSpacing: "0.04em" }}>
+        Service
+      </label>
+      <div style={{ display: "flex", gap: 5, marginBottom: 14, flexWrap: "wrap" }}>
+        {SERVICE_KEYS.map((key) => (
+          <button
+            key={key}
+            className="pricer-service-btn"
+            onClick={() => handleServiceChange(key)}
+            style={{
+              flex: "1 1 auto",
+              minWidth: 0,
+              padding: "10px 8px",
+              borderRadius: 8,
+              border: serviceKey === key ? "1.5px solid #3b82f6" : "1.5px solid #1e2330",
+              background: serviceKey === key ? "linear-gradient(135deg, #172554, #0f1117)" : "#0a0d12",
+              color: serviceKey === key ? "#93c5fd" : "#6b7280",
+              fontSize: 11,
+              fontWeight: 600,
+              cursor: "pointer",
+              fontFamily: "'DM Sans', sans-serif",
+              transition: "all 0.2s ease",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {SERVICES[key].label}
+          </button>
+        ))}
+      </div>
+
+      {/* Patch Type selector (only for patches) */}
+      {isPatches && (
+        <>
+          <label style={{ display: "block", marginBottom: 6, color: "#9ca3af", fontSize: 12, fontWeight: 500, letterSpacing: "0.04em" }}>
+            Patch Type
+          </label>
+          <select
+            className="pricer-select"
+            value={patchTypeIdx}
+            onChange={e => handlePatchTypeChange(parseInt(e.target.value))}
+            style={{ ...selectStyle, marginBottom: 12 }}
+          >
+            {PATCH_TYPES.map((pt, i) => (
+              <option key={i} value={i}>{pt.label}</option>
+            ))}
+          </select>
+        </>
+      )}
+
+      <label style={{ display: "block", marginBottom: 6, color: "#9ca3af", fontSize: 12, fontWeight: 500, letterSpacing: "0.04em" }}>
+        {isPatches ? "Patch Size" : "Decoration Type"}
+      </label>
+      <select
+        className="pricer-select"
+        value={optionIdx}
+        onChange={e => onChange({ ...location, optionIdx: parseInt(e.target.value) })}
+        style={selectStyle}
+      >
+        {table.options.map((opt, i) => (
+          <option key={i} value={i}>{opt}</option>
+        ))}
+      </select>
+
+      <div style={{
+        marginTop: 14,
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "baseline",
+      }}>
+        <span style={{ color: "#6b7280", fontSize: 12, fontWeight: 500 }}>
+          {isPatches ? "Patch cost / unit" : "Decoration cost / unit"}
+        </span>
+        <span style={{
+          color: isUnavailable ? "#ef4444" : belowPatchMin ? "#fcd34d" : "#34d399",
+          fontSize: 20,
+          fontWeight: 700,
+          fontFamily: "'JetBrains Mono', monospace",
+        }}>
+          {formatCurrency(decoPrice)}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function AutoPricer() {
+  const [productPrice, setProductPrice] = useState("");
+  const [qty, setQty] = useState("");
+  const [locations, setLocations] = useState([{ serviceKey: "screenPrint", optionIdx: 0, patchTypeIdx: 0 }]);
+
+  const addLocation = useCallback(() => {
+    if (locations.length < 4) setLocations(prev => [...prev, { serviceKey: "screenPrint", optionIdx: 0, patchTypeIdx: 0 }]);
+  }, [locations.length]);
+
+  const removeLocation = useCallback((idx) => {
+    setLocations(prev => prev.filter((_, i) => i !== idx));
+  }, []);
+
+  const updateLocation = useCallback((idx, val) => {
+    setLocations(prev => prev.map((l, i) => i === idx ? val : l));
+  }, []);
+
+  const pricing = useMemo(() => {
+    const price = parseFloat(productPrice);
+    const quantity = parseInt(qty);
+    if (!price || !quantity || quantity < 1) return null;
+
+    // Product markup comes from the FIRST location's service
+    const firstService = SERVICES[locations[0].serviceKey];
+    let markup;
+    if (firstService.isPatches) {
+      const patchTierIdx = getTierIndex(quantity, PATCH_QTY_TIERS);
+      markup = firstService.markup[patchTierIdx];
+    } else {
+      const tierIdx = getTierIndex(quantity, QTY_TIERS);
+      markup = firstService.firstLocation.markup[tierIdx];
+    }
+    // Store has a $5.00 minimum product markup
+    const STORE_MIN_MARKUP = 5.00;
+    const isStoreFirst = locations[0].serviceKey === "store";
+    const markedUpProduct = isStoreFirst
+      ? Math.max(price * markup, price + STORE_MIN_MARKUP)
+      : price * markup;
+
+    let totalDecoPerUnit = 0;
+    const locationBreakdown = locations.map((loc, i) => {
+      const service = SERVICES[loc.serviceKey];
+      const isFirst = i === 0;
+      const table = getLocationTable(loc.serviceKey, loc, isFirst);
+      const tierIdx = getTierIndex(quantity, table.qtyTiers);
+      const optIdx = loc.optionIdx < table.options.length ? loc.optionIdx : 0;
+      const decoPrice = table.prices[tierIdx]?.[optIdx] ?? 0;
+      totalDecoPerUnit += decoPrice;
+
+      let labelDetail = table.options[optIdx];
+      if (service.isPatches) {
+        const ptIdx = loc.patchTypeIdx || 0;
+        labelDetail = `${service.patchTypes[ptIdx].label} ${labelDetail}`;
+      }
+
+      return {
+        label: labelDetail,
+        serviceName: service.label,
+        decoPrice,
+        isFirst,
+        isUnavailable: decoPrice >= 100 && loc.serviceKey === "screenPrint",
+      };
+    });
+
+    const unitPrice = markedUpProduct + totalDecoPerUnit;
+    const totalPrice = unitPrice * quantity;
+
+    // Track if store minimum markup was applied
+    const storeMinApplied = isStoreFirst && (price * markup) < (price + STORE_MIN_MARKUP);
+
+    // Determine tier label from first location
+    const firstTable = getLocationTable(locations[0].serviceKey, locations[0], true);
+    const firstTierIdx = getTierIndex(quantity, firstTable.qtyTiers);
+    const tierLabel = `${firstTable.qtyTiers[firstTierIdx]}+ tier`;
+
+    return {
+      markedUpProduct,
+      markup,
+      storeMinApplied,
+      totalDecoPerUnit,
+      unitPrice,
+      totalPrice,
+      quantity,
+      locationBreakdown,
+      tierLabel,
+    };
+  }, [productPrice, qty, locations]);
+
+  return (
+    <>
+      <link href={FONT_URL} rel="stylesheet" />
+      <div style={{
+        minHeight: "100vh",
+        background: "#08090c",
+        fontFamily: "'DM Sans', sans-serif",
+        color: "#e5e7eb",
+        padding: "32px 16px",
+      }}>
+        <div style={{ maxWidth: 920, margin: "0 auto" }}>
+          {/* Header */}
+          <div style={{ marginBottom: 36, textAlign: "center" }}>
+            <div style={{
+              display: "inline-block",
+              background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              marginBottom: 8,
+              fontFamily: "'JetBrains Mono', monospace",
+            }}>
+              PTVO AUTO PRICER
+            </div>
+            <h1 style={{
+              fontSize: 32,
+              fontWeight: 700,
+              color: "#f9fafb",
+              margin: "4px 0 8px",
+              letterSpacing: "-0.02em",
+            }}>
+              Instant Decoration Pricing
+            </h1>
+            <p style={{ color: "#6b7280", fontSize: 14, margin: 0 }}>
+              Enter product details and imprint locations to generate pricing
+            </p>
+            <a href="../" style={{
+              display: "inline-block",
+              marginTop: 16,
+              color: "#6b7280",
+              fontSize: 13,
+              fontWeight: 600,
+              textDecoration: "none",
+            }}>
+              ← Projects
+            </a>
+          </div>
+
+          <div className="pricer-grid">
+            {/* LEFT: Inputs */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              {/* Product Price + Qty */}
+              <div style={{
+                background: "#0f1117",
+                border: "1px solid #1e2330",
+                borderRadius: 16,
+                padding: 22,
+                display: "flex",
+                gap: 16,
+              }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: "block", color: "#9ca3af", fontSize: 12, fontWeight: 500, letterSpacing: "0.04em", marginBottom: 8 }}>
+                    PRODUCT COST
+                  </label>
+                  <div style={{ position: "relative" }}>
+                    <span style={{
+                      position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)",
+                      color: "#4b5563", fontSize: 16, fontWeight: 600, pointerEvents: "none",
+                    }}>$</span>
+                    <input
+                      className="pricer-input"
+                      type="number"
+                      inputMode="decimal"
+                      placeholder="0.00"
+                      value={productPrice}
+                      onChange={e => setProductPrice(e.target.value)}
+                      step="0.01"
+                      min="0"
+                      style={{
+                        width: "100%",
+                        background: "#0a0d12",
+                        border: "1px solid #1e2330",
+                        borderRadius: 8,
+                        color: "#f9fafb",
+                        padding: "12px 12px 12px 28px",
+                        fontSize: 16,
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontWeight: 600,
+                        outline: "none",
+                        boxSizing: "border-box",
+                      }}
+                    />
+                  </div>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: "block", color: "#9ca3af", fontSize: 12, fontWeight: 500, letterSpacing: "0.04em", marginBottom: 8 }}>
+                    QUANTITY
+                  </label>
+                  <input
+                    className="pricer-input"
+                    type="number"
+                    inputMode="numeric"
+                    placeholder="0"
+                    value={qty}
+                    onChange={e => setQty(e.target.value)}
+                    min="1"
+                    style={{
+                      width: "100%",
+                      background: "#0a0d12",
+                      border: "1px solid #1e2330",
+                      borderRadius: 8,
+                      color: "#f9fafb",
+                      padding: "12px 12px",
+                      fontSize: 16,
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontWeight: 600,
+                      outline: "none",
+                      boxSizing: "border-box",
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Imprint Locations */}
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                  <span style={{ color: "#9ca3af", fontSize: 12, fontWeight: 500, letterSpacing: "0.04em" }}>
+                    IMPRINT LOCATIONS ({locations.length}/4)
+                  </span>
+                  {locations.length < 4 && (
+                    <button onClick={addLocation} className="pricer-add-btn" style={{
+                      background: "none",
+                      border: "1px dashed #2a3a5c",
+                      borderRadius: 8,
+                      color: "#3b82f6",
+                      fontSize: 12,
+                      fontWeight: 600,
+                      padding: "8px 16px",
+                      cursor: "pointer",
+                      fontFamily: "'DM Sans', sans-serif",
+                      transition: "all 0.15s",
+                    }}
+                      onMouseEnter={e => { e.target.style.borderColor = "#3b82f6"; e.target.style.background = "#0c1629"; }}
+                      onMouseLeave={e => { e.target.style.borderColor = "#2a3a5c"; e.target.style.background = "none"; }}
+                    >
+                      + Add Location
+                    </button>
+                  )}
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {locations.map((loc, i) => (
+                    <LocationCard
+                      key={i}
+                      index={i}
+                      location={loc}
+                      onChange={val => updateLocation(i, val)}
+                      onRemove={() => removeLocation(i)}
+                      qty={parseInt(qty) || 1}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT: Results */}
+            <div className="pricer-results">
+              {pricing ? (
+                <div style={{
+                  background: "linear-gradient(160deg, #111827 0%, #0a0d14 60%, #0c1222 100%)",
+                  border: "1px solid #1e2330",
+                  borderRadius: 20,
+                  padding: 28,
+                  overflow: "hidden",
+                  position: "relative",
+                }}>
+                  <div style={{
+                    position: "absolute", top: -60, right: -60, width: 200, height: 200,
+                    background: "radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%)",
+                    pointerEvents: "none",
+                  }} />
+
+                  <div style={{
+                    fontSize: 12, fontWeight: 600, color: "#6b7280", letterSpacing: "0.08em",
+                    marginBottom: 20, fontFamily: "'JetBrains Mono', monospace",
+                  }}>
+                    PRICE SUMMARY
+                  </div>
+
+                  {/* Big price */}
+                  <div style={{ textAlign: "center", padding: "20px 0 28px", borderBottom: "1px solid #1e2330" }}>
+                    <div style={{ color: "#6b7280", fontSize: 12, fontWeight: 500, marginBottom: 4 }}>Per Unit Price</div>
+                    <div style={{
+                      fontSize: 48, fontWeight: 700, fontFamily: "'JetBrains Mono', monospace",
+                      background: "linear-gradient(135deg, #60a5fa, #34d399)",
+                      WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                      letterSpacing: "-0.03em", lineHeight: 1.1,
+                    }}>
+                      {formatCurrency(pricing.unitPrice)}
+                    </div>
+                    <div style={{ color: "#4b5563", fontSize: 12, marginTop: 6, fontFamily: "'JetBrains Mono', monospace" }}>
+                      {pricing.tierLabel}
+                    </div>
+                  </div>
+
+                  {/* Total */}
+                  <div style={{
+                    display: "flex", justifyContent: "space-between", alignItems: "baseline",
+                    padding: "18px 0", borderBottom: "1px solid #1e2330",
+                  }}>
+                    <span style={{ color: "#9ca3af", fontSize: 14, fontWeight: 500 }}>Total ({pricing.quantity} pcs)</span>
+                    <span style={{
+                      fontSize: 26, fontWeight: 700, color: "#f9fafb", fontFamily: "'JetBrains Mono', monospace",
+                    }}>
+                      {formatCurrency(pricing.totalPrice)}
+                    </span>
+                  </div>
+
+                  {/* Breakdown */}
+                  <div style={{ paddingTop: 18 }}>
+                    <div style={{
+                      fontSize: 11, fontWeight: 600, color: "#4b5563", letterSpacing: "0.08em",
+                      marginBottom: 14, fontFamily: "'JetBrains Mono', monospace",
+                    }}>
+                      BREAKDOWN
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                      <div style={{
+                        display: "flex", justifyContent: "space-between",
+                        background: "#0a0d12", borderRadius: 10, padding: "12px 14px",
+                      }}>
+                        <div>
+                          <div style={{ color: "#9ca3af", fontSize: 12, fontWeight: 500 }}>Product Cost</div>
+                          <div style={{ color: "#6b7280", fontSize: 11, marginTop: 2 }}>
+                            {pricing.storeMinApplied
+                              ? `${formatCurrency(parseFloat(productPrice))} + $5.00 min markup`
+                              : `${formatCurrency(parseFloat(productPrice))} × ${(pricing.markup * 100).toFixed(0)}% markup`
+                            }
+                          </div>
+                          {pricing.storeMinApplied && (
+                            <div style={{ color: "#f59e0b", fontSize: 10, marginTop: 3, fontFamily: "'JetBrains Mono', monospace" }}>
+                              $5.00 min applied (markup was {formatCurrency(parseFloat(productPrice) * pricing.markup - parseFloat(productPrice))})
+                            </div>
+                          )}
+                        </div>
+                        <div style={{
+                          color: "#e5e7eb", fontSize: 16, fontWeight: 600,
+                          fontFamily: "'JetBrains Mono', monospace", alignSelf: "center",
+                        }}>
+                          {formatCurrency(pricing.markedUpProduct)}
+                        </div>
+                      </div>
+
+                      {pricing.locationBreakdown.map((lb, i) => (
+                        <div key={i} style={{
+                          display: "flex", justifyContent: "space-between",
+                          background: "#0a0d12", borderRadius: 10, padding: "12px 14px",
+                        }}>
+                          <div>
+                            <div style={{ color: "#9ca3af", fontSize: 12, fontWeight: 500 }}>
+                              {lb.isFirst ? "Primary" : `Location ${i + 1}`}
+                            </div>
+                            <div style={{ color: "#6b7280", fontSize: 11, marginTop: 2 }}>
+                              {lb.serviceName} — {lb.label}
+                            </div>
+                          </div>
+                          <div style={{
+                            color: lb.isUnavailable ? "#ef4444" : "#34d399",
+                            fontSize: 16, fontWeight: 600,
+                            fontFamily: "'JetBrains Mono', monospace", alignSelf: "center",
+                          }}>
+                            +{formatCurrency(lb.decoPrice)}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Formula */}
+                    <div style={{
+                      marginTop: 18, padding: "10px 14px", background: "#0a0d12",
+                      borderRadius: 10, border: "1px dashed #1e2330",
+                    }}>
+                      <div style={{
+                        color: "#4b5563", fontSize: 11, fontFamily: "'JetBrains Mono', monospace", lineHeight: 1.6,
+                      }}>
+                        <span style={{ color: "#6b7280" }}>formula:</span> {pricing.storeMinApplied ? "(product + $5.00 min)" : "(product × markup)"} + decoration costs<br />
+                        <span style={{ color: "#6b7280" }}>calc:</span> {pricing.storeMinApplied
+                          ? `(${formatCurrency(parseFloat(productPrice))} + $5.00)`
+                          : `(${formatCurrency(parseFloat(productPrice))} × ${(pricing.markup * 100).toFixed(0)}%)`
+                        } + {formatCurrency(pricing.totalDecoPerUnit)} = <span style={{ color: "#93c5fd" }}>{formatCurrency(pricing.unitPrice)}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div style={{
+                  background: "#0f1117", border: "1px dashed #1e2330", borderRadius: 20,
+                  padding: "80px 40px", textAlign: "center",
+                }}>
+                  <div style={{ fontSize: 40, marginBottom: 16, opacity: 0.3 }}>📊</div>
+                  <div style={{ color: "#4b5563", fontSize: 15, fontWeight: 500 }}>
+                    Enter product cost and quantity<br />to generate pricing
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<AutoPricer />);
+</script></body></html>

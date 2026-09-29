@@ -290,6 +290,11 @@ main {
 .transfer-icon::before { top: 16px; }
 .transfer-icon::after { bottom: 16px; box-shadow: 0 -8px 0 rgba(255, 255, 255, 0.55); }
 
+.pricer-icon {
+  background: var(--navy);
+  color: #fff;
+}
+
 .quote-icon {
   background: #e6f0eb;
   color: var(--green);

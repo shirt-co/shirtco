@@ -20,6 +20,7 @@ shirtco/
 ├── SHIP.md            # Non-dev ship playbook
 ├── transfers/         # Live DTF transfer order portal
 ├── supplies/          # Live QR supply kanban
+├── pricer/            # Live decoration auto pricer
 ├── quotes/            # Quoting tool planning space
 └── art/               # Art tracker planning space
 ```
@@ -29,6 +30,7 @@ Production URLs:
 - Hub: `https://shirt-co.github.io/shirtco/`
 - Transfer Orders: `https://shirt-co.github.io/shirtco/transfers/`
 - Supply Kanban: `https://shirt-co.github.io/shirtco/supplies/`
+- Auto Pricer: `https://shirt-co.github.io/shirtco/pricer/`
 - Quoting Tool: `https://shirt-co.github.io/shirtco/quotes/`
 - Art Tracker: `https://shirt-co.github.io/shirtco/art/`
 
@@ -58,6 +60,10 @@ The supply app is a phone-scannable kanban for workplace supplies:
 
 QR codes embed item details, so phones do not need a shared login. Board state currently lives in each browser's `localStorage`; cross-device reorders travel by email until a shared backend is added.
 
+## Auto Pricer
+
+Shop-floor decoration pricing from blank cost, quantity, and imprint locations. Pricing tables and markup math live in `pricer/index.html` (screen print, embroidery, DTF, store, and patches). On phones the layout stacks to one column and the results panel is not sticky.
+
 ## Run locally
 
 No build step. Serve the repository root:
@@ -66,7 +72,7 @@ No build step. Serve the repository root:
 python3 -m http.server 8080
 ```
 
-Visit `http://localhost:8080`. Transfer Orders is at `http://localhost:8080/transfers/`. The Kanban is at `http://localhost:8080/supplies/`.
+Visit `http://localhost:8080`. Transfer Orders is at `http://localhost:8080/transfers/`. The Kanban is at `http://localhost:8080/supplies/`. Auto Pricer is at `http://localhost:8080/pricer/`.
 
 ## Deploy
 
